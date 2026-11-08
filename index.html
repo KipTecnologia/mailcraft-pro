@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailCraft Pro ✉️ — React Email & Transactional Studio</title>
+  <meta name="description" content="Next.js 15 & React Email Studio with natural full-screen email canvas, real-time variable injection, and turnkey code exporter. By Kip Tecnologia.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (typeof tailwind !== "undefined") { tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            craft: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+            }
+          }
+        }
+      }
+    };
+  }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .iphone-titanium-shadow {
+      box-shadow: 0 0 0 10px #e2e8f0, 0 0 0 12px #cbd5e1, 0 25px 60px -15px rgba(15, 23, 42, 0.2);
+    }
+    @keyframes notification-pop {
+      0% { transform: translateY(-30px) scale(0.95); opacity: 0; }
+      12% { transform: translateY(0) scale(1); opacity: 1; }
+      88% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-30px) scale(0.95); opacity: 0; }
+    }
+    .animate-mac-notification {
+      animation: notification-pop 4.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    /* Smooth natural scrolling */
+    html, body {
+      height: 100%;
+    }
+  </style>
+</head>
+<body class="h-screen flex flex-col font-sans antialiased bg-slate-50 text-slate-900 overflow-hidden">
+
+  <!-- TOP COMMAND BAR -->
+  <header class="h-14 border-b border-slate-200 bg-white px-4 sm:px-6 flex items-center justify-between z-30 flex-shrink-0 shadow-sm">
+    
+    <!-- Brand / Studio Identity -->
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-orange-500 to-rose-500 flex items-center justify-center shadow-md shadow-orange-500/20 text-white flex-shrink-0">
+        <i class="fa-solid fa-envelope-open-text text-sm"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-black text-sm tracking-tight text-slate-900">MailCraft</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold uppercase tracking-wider border border-amber-300">STUDIO</span>
+          <span class="text-[11px] text-slate-500 hidden sm:inline">por <a href="https://github.com/KipTecnologia" target="_blank" class="text-blue-600 hover:underline font-semibold">Kip Tecnologia</a></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Viewport Mode Switcher -->
+    <div class="flex items-center gap-2">
+      <div class="flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-semibold">
+        <button id="device-btn-desktop" onclick="setDevice('desktop')" class="px-3.5 py-1 rounded-lg transition flex items-center gap-1.5 bg-white text-blue-600 shadow-sm border border-slate-200/60 font-bold">
+          <i class="fa-solid fa-display text-xs"></i> <span id="lbl-btn-desktop">Normal View (Desktop)</span>
+        </button>
+        <button id="device-btn-mobile" onclick="setDevice('mobile')" class="px-3.5 py-1 rounded-lg transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
+          <i class="fa-solid fa-mobile-screen-button text-xs"></i> <span>iPhone 16</span>
+        </button>
+      </div>
+
+      <!-- Simulate Send Push Notification -->
+      <button onclick="triggerSimulatedEmail()" class="px-3.5 py-1.5 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold flex items-center gap-1.5 transition active:scale-95 shadow-sm">
+        <i class="fa-solid fa-paper-plane text-[11px]"></i> <span id="lbl-btn-sim-send" class="hidden sm:inline">Simulate Send</span>
+      </button>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <button onclick="openMailcraftPricingModal()" class="px-3.5 py-1.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold flex items-center gap-1.5 shadow-sm transition">
+        <i class="fa-solid fa-crown text-amber-600 text-[11px]"></i> <span id="lbl-mail-btn-pricing">Pro Plans</span>
+      </button>
+      <!-- Toggle Inspector -->
+      <button onclick="toggleMailcraftLanguage()" id="mail-lang-btn" class="px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold flex items-center gap-1 shadow-sm transition" title="Toggle English / Português">
+          <span id="mail-lang-flag">🇧🇷</span> <span id="mail-lang-label">PT</span>
+        </button>
+        <button onclick="toggleInspector()" class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition" title="Painel de Parâmetros e Código">
+        <i class="fa-solid fa-sliders text-slate-500"></i> <span id="lbl-btn-inspector" class="hidden md:inline">Inspector</span>
+      </button>
+
+      <!-- Gumroad CTA -->
+      <a href="https://rancharia.gumroad.com" target="_blank" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black text-xs shadow-md shadow-orange-500/20 flex items-center gap-1.5 transition hover:scale-[1.02] active:scale-[0.98]">
+        <i class="fa-solid fa-code text-[11px]"></i>
+        <span id="lbl-mail-btn-getcode">Get Code ($39)</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- SUB-HEADER: TEMPLATE PALETTE BAR -->
+  <div class="h-12 border-b border-slate-200 bg-white px-4 sm:px-6 flex items-center gap-2 overflow-x-auto no-scrollbar shadow-sm flex-shrink-0">
+    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-2 flex items-center gap-1 flex-shrink-0">
+      <i class="fa-solid fa-layer-group text-slate-400"></i> <span id="lbl-tpl-bar-title">Templates:</span>
+    </span>
+    
+    <button onclick="selectTemplate('invoice')" id="tpl-invoice" class="px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 whitespace-nowrap bg-blue-50 text-blue-700 border border-blue-200 transition">
+      <i class="fa-solid fa-file-invoice-dollar text-[11px]"></i> <span id="lbl-tpl-invoice">1. SaaS Invoice & Billing</span>
+    </button>
+    <button onclick="selectTemplate('welcome')" id="tpl-welcome" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent transition">
+      <i class="fa-solid fa-sparkles text-[11px] text-amber-500"></i> <span id="lbl-tpl-welcome">2. Welcome & Onboarding</span>
+    </button>
+    <button onclick="selectTemplate('otp')" id="tpl-otp" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent transition">
+      <i class="fa-solid fa-key text-[11px] text-emerald-600"></i> <span id="lbl-tpl-otp">3. OTP Code / Magic Link</span>
+    </button>
+    <button onclick="selectTemplate('security')" id="tpl-security" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent transition">
+      <i class="fa-solid fa-shield-halved text-[11px] text-rose-500"></i> <span id="lbl-tpl-security">4. Security Alert</span>
+    </button>
+    <button onclick="selectTemplate('invite')" id="tpl-invite" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent transition">
+      <i class="fa-solid fa-user-plus text-[11px] text-purple-600"></i> <span id="lbl-tpl-invite">5. Team / Org Invite</span>
+    </button>
+    <button onclick="selectTemplate('upgrade')" id="tpl-upgrade" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent transition">
+      <i class="fa-solid fa-arrow-trend-up text-[11px] text-orange-500"></i> <span id="lbl-tpl-upgrade">6. Trial End & Upgrade</span>
+    </button>
+  </div>
+
+  <!-- MAIN WORKSPACE -->
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- SIMULATED NOTIFICATION (LIGHT STYLE) -->
+    <div id="simulated-notification" class="hidden absolute top-4 right-6 z-50 w-full max-w-sm">
+      <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xl backdrop-blur-xl flex items-start gap-3 animate-mac-notification ring-1 ring-black/5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white flex-shrink-0 shadow-md">
+          <i class="fa-solid fa-envelope text-base"></i>
+        </div>
+        <div class="flex-1 truncate">
+          <div class="flex items-center justify-between text-[11px] text-slate-400">
+            <span class="font-bold text-slate-900 tracking-wider">Mail</span>
+            <span>Agora</span>
+          </div>
+          <h5 id="notif-sender" class="font-bold text-xs text-slate-800 truncate mt-0.5">Kip Tecnologia &lt;faturamento@kiptecnologia.com.br&gt;</h5>
+          <p id="notif-subject" class="text-xs text-slate-600 truncate">Sua fatura foi emitida com sucesso</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN SCROLLABLE READING CANVAS -->
+    <main id="main-scroll-canvas" class="flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center bg-slate-100/70">
+      
+      <!-- DESKTOP VIEW: NATURAL FULL-SCREEN EMAIL DOCUMENT (NO WEIRD CONSTRAINED WINDOWS) -->
+      <div id="desktop-container" class="w-full max-w-2xl bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-10 my-4 transition-all">
+        
+        <!-- Recipient & Subject Header Bar -->
+        <div class="border-b border-slate-100 pb-6 mb-8">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white font-extrabold text-sm flex items-center justify-center shadow-sm flex-shrink-0">
+                KT
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-extrabold text-sm text-slate-900">Kip Tecnologia</h3>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                    <span id="lbl-verified-sender">Verified Sender ✓</span>
+                  </span>
+                </div>
+                <div class="text-xs text-slate-500 mt-0.5 flex flex-wrap items-center gap-x-2">
+                  <span id="desk-from-email" class="font-mono text-slate-600 text-[11px]">faturamento@kiptecnologia.com.br</span>
+                  <span>•</span>
+                  <span><span id="lbl-to-label">To:</span> <strong id="desk-to-email" class="text-slate-800">alex.morgan@techmail.io</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <span class="text-xs text-slate-400 font-medium whitespace-nowrap"><span id="lbl-email-date">Today, 09:41 AM</span></span>
+          </div>
+
+          <h1 id="desk-subject-title" class="text-xl sm:text-2xl font-black text-slate-900 mt-5 leading-snug">
+            Fatura #INV-2026-884 confirmada com sucesso
+          </h1>
+        </div>
+
+        <!-- Rendered Email Body -->
+        <div id="desktop-rendered-email" class="leading-relaxed text-slate-800">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+
+      <!-- MOBILE VIEW: IPHONE 16 PRO CONTAINER (ONLY SHOWN IF USER EXPLICITLY CLICKS MOBILE) -->
+      <div id="iphone-container" class="hidden w-[390px] h-[780px] rounded-[54px] bg-slate-100 iphone-titanium-shadow flex flex-col overflow-hidden relative border border-slate-300 transition-all my-auto">
+        
+        <!-- Dynamic Island -->
+        <div class="h-10 w-full flex items-center justify-center pt-2 select-none relative z-20 bg-slate-50 border-b border-slate-200/50">
+          <div class="w-24 h-6 rounded-full bg-black flex items-center justify-between px-2.5 shadow-sm">
+            <div class="w-2.5 h-2.5 rounded-full bg-[#111]"></div>
+            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+          </div>
+          <span class="absolute left-7 top-3 text-[11px] font-bold text-slate-800 font-sans">09:41</span>
+          <div class="absolute right-7 top-3 flex items-center gap-1.5 text-[10px] text-slate-700">
+            <i class="fa-solid fa-signal"></i>
+            <i class="fa-solid fa-wifi"></i>
+            <i class="fa-solid fa-battery-full text-xs"></i>
+          </div>
+        </div>
+
+        <!-- iOS Mail Header -->
+        <div class="px-5 py-3 border-b border-slate-200 bg-white flex items-center justify-between">
+          <div class="flex items-center gap-1.5 text-xs text-blue-600 font-semibold">
+            <i class="fa-solid fa-chevron-left text-[10px]"></i>
+            <span>Caixas</span>
+          </div>
+          <div class="flex items-center gap-3 text-xs text-slate-600">
+            <i class="fa-solid fa-trash-can"></i>
+            <i class="fa-solid fa-reply"></i>
+            <i class="fa-solid fa-ellipsis"></i>
+          </div>
+        </div>
+
+        <!-- Email Details on Mobile -->
+        <div class="px-5 py-3.5 border-b border-slate-200 bg-white">
+          <h4 id="mobile-subject-header" class="font-extrabold text-sm text-slate-900 leading-tight">
+            Fatura #INV-2026-884 confirmada
+          </h4>
+          <div class="flex items-center gap-2 mt-1.5 text-[11px] text-slate-500">
+            <span class="font-semibold text-slate-700">De:</span>
+            <span id="mobile-from-chip" class="font-medium text-slate-800">faturamento@kiptecnologia.com.br</span>
+          </div>
+          <div class="flex items-center gap-2 mt-0.5 text-[11px] text-slate-500">
+            <span class="font-semibold text-slate-700">Para:</span>
+            <span id="mobile-to-chip" class="text-blue-600">alexandre@empresa.com</span>
+          </div>
+        </div>
+
+        <!-- Mobile Scroll Area -->
+        <div class="flex-1 overflow-y-auto p-5 bg-white">
+          <div id="mobile-rendered-email"></div>
+        </div>
+
+        <!-- Home Bar -->
+        <div class="h-6 w-full flex items-center justify-center bg-white select-none">
+          <div class="w-32 h-1 rounded-full bg-slate-300"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT INSPECTOR DOCK (CLEAN LIGHT SURFACE) -->
+    <aside id="inspector-dock" class="w-96 border-l border-slate-200 bg-white flex flex-col z-20 overflow-hidden shadow-xl transition-all duration-300 flex-shrink-0">
+      
+      <!-- Dock Tabs -->
+      <div class="h-12 border-b border-slate-200 flex items-center px-4 justify-between bg-slate-50 flex-shrink-0">
+        <div class="flex items-center gap-1">
+          <button onclick="setInspectorTab('variables')" id="tab-btn-vars" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-blue-600 border border-slate-200 shadow-sm">
+            <i class="fa-solid fa-sliders text-[11px]"></i> <span id="lbl-tab-vars">Live Variables</span>
+          </button>
+          <button onclick="setInspectorTab('code')" id="tab-btn-code" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
+            <i class="fa-solid fa-code text-[11px]"></i> <span id="lbl-tab-code">Code (.tsx)</span>
+          </button>
+        </div>
+        <button onclick="toggleMailcraftLanguage()" id="mail-lang-btn" class="px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold flex items-center gap-1 shadow-sm transition" title="Toggle English / Português">
+          <span id="mail-lang-flag">🇧🇷</span> <span id="mail-lang-label">PT</span>
+        </button>
+        <button onclick="toggleInspector()" class="text-slate-400 hover:text-slate-700 text-xs">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- TAB 1: LIVE VARIABLES -->
+      <div id="tab-content-vars" class="flex-1 overflow-y-auto p-5 space-y-4">
+        <div>
+          <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+            <i class="fa-solid fa-pen-to-square text-amber-500"></i> <span id="lbl-live-edit-title">Live Real-Time Editing</span>
+          </h4>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            <span id="lbl-live-edit-sub">Type in any field below to update the email preview instantly.</span>
+          </p>
+        </div>
+
+        <div class="space-y-3.5">
+          <div>
+            <label id="lbl-var-cust-name" class="text-xs font-bold text-slate-700 block mb-1">Customer Name</label>
+            <input type="text" id="var-customer-name" value="Alexandre Prado" oninput="updateLiveVariables()"
+                   class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition shadow-sm">
+          </div>
+
+          <div>
+            <label id="lbl-var-cust-email" class="text-xs font-bold text-slate-700 block mb-1">Customer Email</label>
+            <input type="email" id="var-customer-email" value="alexandre@empresa.com" oninput="updateLiveVariables()"
+                   class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition shadow-sm">
+          </div>
+
+          <div>
+            <label id="lbl-dyn-1" class="text-xs font-bold text-slate-700 block mb-1">Valor da Fatura (R$)</label>
+            <input type="text" id="var-dyn-1" value="R$ 497,00" oninput="updateLiveVariables()"
+                   class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition font-mono shadow-sm">
+          </div>
+
+          <div>
+            <label id="lbl-dyn-2" class="text-xs font-bold text-slate-700 block mb-1">Número do Documento</label>
+            <input type="text" id="var-dyn-2" value="INV-2026-884" oninput="updateLiveVariables()"
+                   class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition font-mono shadow-sm">
+          </div>
+
+          <div>
+            <label id="lbl-dyn-3" class="text-xs font-bold text-slate-700 block mb-1">Item / Descrição</label>
+            <input type="text" id="var-dyn-3" value="Plano Anual MailCraft Pro" oninput="updateLiveVariables()"
+                   class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition shadow-sm">
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200">
+          <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1.5">
+            <div class="flex items-center gap-2 font-bold text-slate-800">
+              <i class="fa-solid fa-badge-check text-blue-600"></i>
+              <span id="lbl-badge-std-title">React Email & Resend Standard</span>
+            </div>
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              <span id="lbl-badge-std-sub">Validated across Apple Mail, Gmail, Outlook & Yahoo. Fully responsive.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: CODE EXPORTER -->
+      <div id="tab-content-code" class="hidden flex-1 overflow-y-auto p-5 space-y-4 flex-col">
+        <div class="flex items-center justify-between">
+          <div>
+            <h4 id="lbl-code-clean-title" class="text-xs font-bold text-slate-900 uppercase tracking-wider">Clean Code</h4>
+            <span class="text-xs text-slate-500">React Email (.tsx)</span>
+          </div>
+          <button onclick="copyCode()" id="copy-code-btn" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-600/20 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-copy"></i> <span id="lbl-btn-copy-code">Copy TSX</span>
+          </button>
+        </div>
+
+        <!-- Code Snippet Box -->
+        <pre class="flex-1 p-3.5 rounded-2xl bg-slate-900 font-mono text-[11px] text-slate-200 overflow-x-auto leading-relaxed border border-slate-800 select-all">
+<code id="code-snippet-pre">
+// Código gerado dinamicamente
+</code></pre>
+      </div>
+    </aside>
+  </div>
+
+  <!-- APPLICATION JAVASCRIPT ENGINE -->
+  <script>
+    const studio = {
+      device: 'desktop',       // 'desktop' (default) | 'mobile'
+      currentTemplate: 'invoice',
+      inspectorOpen: true,
+      inspectorTab: 'variables',
+      vars: {
+        customerName: 'Alexandre Prado',
+        customerEmail: 'alexandre@empresa.com',
+        dyn1: 'R$ 497,00',
+        dyn2: 'INV-2026-884',
+        dyn3: 'Plano Anual MailCraft Pro'
+      }
+    };
+
+    // Realistic Editorial Templates in Clean Light Style
+    const templates = {
+      invoice: {
+        name: 'Fatura & Cobrança SaaS',
+        from: 'faturamento@kiptecnologia.com.br',
+        subject: 'Fatura #INV-2026-884 confirmada com sucesso',
+        dyn1Label: 'Valor da Fatura (R$)',
+        dyn2Label: 'Número do Recibo',
+        dyn3Label: 'Plano / Item',
+        render: (v) => `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; line-height: 1.6;">
+            <!-- Salutation -->
+            <p style="font-size: 15px; color: #334155; margin: 0 0 20px;">
+              Olá <strong>${v.customerName}</strong>, confirmamos o recebimento do seu pagamento referente à assinatura do <strong>${v.dyn3}</strong>.
+            </p>
+
+            <!-- Value Highlight Card -->
+            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; padding: 24px; margin-bottom: 28px; text-align: center;">
+              <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">TOTAL LIQUIDADO</span>
+              <div style="font-size: 38px; font-weight: 900; color: #0f172a; font-family: monospace; margin: 6px 0;">${v.dyn1}</div>
+              <span style="display: inline-block; background-color: #ecfdf5; color: #059669; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 999px; border: 1px solid #a7f3d0;">
+                Pagamento Aprovado ✓
+              </span>
+            </div>
+
+            <!-- Details Table -->
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 28px;">
+              <thead>
+                <tr style="border-bottom: 2px solid #f1f5f9; text-align: left; color: #64748b; font-size: 11px; text-transform: uppercase;">
+                  <th style="padding: 10px 0;">Descrição do Item</th>
+                  <th style="padding: 10px 0; text-align: right;">Código</th>
+                  <th style="padding: 10px 0; text-align: right;">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                  <td style="padding: 14px 0; font-weight: 600; color: #1e293b;">${v.dyn3}</td>
+                  <td style="padding: 14px 0; text-align: right; font-family: monospace; color: #64748b;">#${v.dyn2}</td>
+                  <td style="padding: 14px 0; text-align: right; font-weight: 800; color: #0f172a;">${v.dyn1}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- CTA Button -->
+            <div style="text-align: center; margin-bottom: 32px;">
+              <a href="#" style="display: inline-block; background-color: #0f172a; color: #ffffff; font-weight: 700; font-size: 14px; padding: 14px 32px; border-radius: 14px; text-decoration: none; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);">
+                Baixar Fatura Oficial em PDF (A4)
+              </a>
+            </div>
+
+            <!-- Footer -->
+            <div style="border-top: 1px solid #f1f5f9; padding-top: 20px; text-align: center; font-size: 12px; color: #94a3b8; line-height: 1.6;">
+              <p style="margin: 0; font-weight: 600; color: #64748b;">Kip Tecnologia LTDA • CNPJ 00.000.000/0001-00</p>
+              <p style="margin: 4px 0 0;">Esta é uma mensagem automática de faturamento. Em caso de dúvidas, contate <a href="mailto:contato@kiptecnologia.com.br" style="color: #2563eb; text-decoration: none;">contato@kiptecnologia.com.br</a></p>
+            </div>
+          </div>
+        `
+      },
+      welcome: {
+        name: 'Boas-vindas & Onboarding',
+        from: 'fundadores@kiptecnologia.com.br',
+        subject: 'Bem-vindo ao Kip Labs! Seus primeiros passos',
+        dyn1Label: 'Cargo / Empresa',
+        dyn2Label: 'Link do Workspace',
+        dyn3Label: 'Chave de Ativação',
+        render: (v) => `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; line-height: 1.6;">
+            <p style="font-size: 15px; color: #334155; margin-bottom: 24px;">
+              Olá <strong>${v.customerName}</strong>! Seu workspace no Kip Labs foi provisionado e está pronto para uso imediato.
+            </p>
+
+            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; padding: 24px; margin-bottom: 28px;">
+              <h3 style="font-size: 14px; font-weight: 800; color: #0f172a; margin: 0 0 16px;">3 Passos Recomendados:</h3>
+              
+              <div style="display: flex; gap: 14px; margin-bottom: 16px;">
+                <div style="width: 26px; height: 26px; border-radius: 8px; background-color: #2563eb; color: #ffffff; font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+                <div style="font-size: 13px;">
+                  <strong style="color: #0f172a;">Acesse seu Repositório:</strong> Baixe o código fonte com permissões de uso turnkey e documentação completa.
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 14px; margin-bottom: 16px;">
+                <div style="width: 26px; height: 26px; border-radius: 8px; background-color: #2563eb; color: #ffffff; font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+                <div style="font-size: 13px;">
+                  <strong style="color: #0f172a;">Configure suas Variáveis:</strong> Insira suas chaves de API e configure seu domínio de envio.
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 14px;">
+                <div style="width: 26px; height: 26px; border-radius: 8px; background-color: #2563eb; color: #ffffff; font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+                <div style="font-size: 13px;">
+                  <strong style="color: #0f172a;">Deploy com 1 Clique:</strong> Publique na Vercel, Cloudflare Pages ou servidor próprio em menos de 5 minutos.
+                </div>
+              </div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 28px;">
+              <a href="#" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-weight: 700; font-size: 14px; padding: 14px 32px; border-radius: 14px; text-decoration: none;">
+                Acessar Meu Dashboard →
+              </a>
+            </div>
+
+            <div style="border-top: 1px solid #f1f5f9; padding-top: 20px; text-align: center; font-size: 12px; color: #94a3b8;">
+              Equipe de Engenharia • Kip Tecnologia
+            </div>
+          </div>
+        `
+      },
+      otp: {
+        name: 'Código OTP / Magic Link',
+        from: 'seguranca@kiptecnologia.com.br',
+        subject: '849-210 é seu código de autenticação',
+        dyn1Label: 'Código OTP',
+        dyn2Label: 'Minutos de Validade',
+        dyn3Label: 'Endereço IP Solicitante',
+        render: (v) => `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; line-height: 1.6; text-align: center;">
+            <div style="display: inline-block; width: 52px; height: 52px; border-radius: 16px; background-color: #eff6ff; border: 1px solid #dbeafe; color: #2563eb; font-size: 22px; line-height: 52px; margin-bottom: 16px;">
+              🔒
+            </div>
+            
+            <h2 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f172a;">Código de Segurança</h2>
+            <p style="font-size: 14px; color: #64748b; margin: 4px 0 24px;">Use o código de 6 dígitos abaixo para autenticar sua sessão:</p>
+
+            <div style="background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 20px; padding: 28px; margin-bottom: 24px; display: inline-block; min-width: 280px;">
+              <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">CÓDIGO TEMPORÁRIO</span>
+              <div style="font-size: 40px; font-weight: 900; letter-spacing: 6px; color: #0f172a; font-family: monospace; margin: 8px 0;">
+                ${v.dyn1.replace('R$', '').trim() || '849-210'}
+              </div>
+              <span style="font-size: 12px; color: #ef4444; font-weight: 600;">Expira em 10 minutos</span>
+            </div>
+
+            <p style="font-size: 12px; color: #94a3b8; margin: 0 0 24px;">
+              Se você não solicitou este acesso, por favor ignore este email ou contate a segurança imediatamente.
+            </p>
+
+            <div style="border-top: 1px solid #f1f5f9; padding-top: 20px; font-size: 12px; color: #94a3b8;">
+              Kip Tecnologia • Segurança da Informação
+            </div>
+          </div>
+        `
+      },
+      security: {
+        name: 'Alerta de Segurança (Novo Login)',
+        from: 'seguranca@kiptecnologia.com.br',
+        subject: '⚠️ Alerta de Segurança: Novo Login Detectado',
+        dyn1Label: 'Localização',
+        dyn2Label: 'Dispositivo',
+        dyn3Label: 'Endereço IP',
+        render: (v) => `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; line-height: 1.6;">
+            <div style="background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 18px; padding: 22px; margin-bottom: 24px; font-size: 13px;">
+              <div style="display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid #fee2e2;">
+                <span style="color: #64748b;">Dispositivo Detectado:</span>
+                <strong style="color: #0f172a;">MacBook Pro (macOS Sequoia)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #fee2e2;">
+                <span style="color: #64748b;">Localização Aproximada:</span>
+                <strong style="color: #0f172a;">São Paulo, Brasil</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding-top: 10px;">
+                <span style="color: #64748b;">Endereço IP:</span>
+                <strong style="color: #0f172a; font-family: monospace;">189.120.45.18</strong>
+              </div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 24px;">
+              <a href="#" style="display: inline-block; background-color: #ef4444; color: #ffffff; font-weight: 700; font-size: 13px; padding: 14px 28px; border-radius: 12px; text-decoration: none;">
+                Não Reconheço este Acesso (Bloquear)
+              </a>
+            </div>
+
+            <div style="border-top: 1px solid #f1f5f9; padding-top: 20px; text-align: center; font-size: 12px; color: #94a3b8;">
+              Central de Segurança • Kip Tecnologia
+            </div>
+          </div>
+        `
+      },
+      invite: {
+        name: 'Convite para Organização',
+        from: 'equipe@kiptecnologia.com.br',
+        subject: 'Você foi convidado para colaborar na KipTecnologia',
+        dyn1Label: 'Nome do Time',
+        dyn2Label: 'Função',
+        dyn3Label: 'Quem Convidou',
+        render: (v) => `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; line-height: 1.6; text-align: center;">
+            <p style="font-size: 15px; color: #64748b; margin: 0 0 24px;">Você foi convidado para colaborar na organização <strong>KipTecnologia</strong>.</p>
+
+            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; padding: 28px; margin-bottom: 28px;">
+              <span style="font-size: 12px; color: #64748b;">Nível de Acesso Atribuído:</span>
+              <div style="margin: 10px 0 20px;">
+                <span style="background-color: #ecfdf5; color: #059669; font-size: 13px; font-weight: 800; padding: 5px 14px; border-radius: 8px; border: 1px solid #a7f3d0;">
+                  ADMINISTRADOR
+                </span>
+              </div>
+              <a href="#" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-weight: 700; font-size: 14px; padding: 14px 32px; border-radius: 14px; text-decoration: none;">
+                Aceitar Convite de Membro
+              </a>
+            </div>
+
+            <div style="border-top: 1px solid #f1f5f9; padding-top: 20px; font-size: 12px; color: #94a3b8;">
+              Kip Tecnologia • Gestão de Membros
+            </div>
+          </div>
+        `
+      },
+      upgrade: {
+        name: 'Fim de Trial & Upgrade',
+        from: 'crescimento@kiptecnologia.com.br',
+        subject: 'Seu período de teste termina em 48 horas',
+        dyn1Label: 'Desconto %',
+        dyn2Label: 'Dias Restantes',
+        dyn3Label: 'Plano Recomendado',
+        render: (v) => `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; line-height: 1.6; text-align: center;">
+            <span style="background-color: #fffbeb; color: #b45309; font-size: 12px; font-weight: 800; padding: 5px 14px; border-radius: 999px; border: 1px solid #fde68a;">
+              OFERTA EXCLUSIVA: 20% DE DESCONTO
+            </span>
+
+            <p style="font-size: 14px; color: #64748b; margin: 16px 0 24px;">Não perca a continuidade dos seus templates e pipelines ativos no estúdio.</p>
+
+            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; padding: 28px; margin-bottom: 28px;">
+              <p style="font-size: 14px; color: #334155; margin: 0 0 20px;">
+                Faça o upgrade para o plano anual e mantenha acesso ilimitado com suporte prioritário da nossa equipe.
+              </p>
+              <a href="#" style="display: inline-block; background-color: #0f172a; color: #ffffff; font-weight: 700; font-size: 14px; padding: 14px 32px; border-radius: 14px; text-decoration: none;">
+                Garantir 20% de Desconto Anual →
+              </a>
+            </div>
+
+            <div style="border-top: 1px solid #f1f5f9; padding-top: 20px; font-size: 12px; color: #94a3b8;">
+              Kip Tecnologia • Crescimento
+            </div>
+          </div>
+        `
+      }
+    };
+
+    // Render Canvas
+    function renderCanvas() {
+      const tpl = templates[studio.currentTemplate];
+
+      // Update Desktop Header
+      document.getElementById('desk-subject-title').innerText = tpl.subject;
+      document.getElementById('desk-from-email').innerText = tpl.from;
+      document.getElementById('desk-to-email').innerText = studio.vars.customerEmail;
+
+      // Update Mobile Header
+      document.getElementById('mobile-subject-header').innerText = tpl.subject;
+      document.getElementById('mobile-from-chip').innerText = tpl.from;
+      document.getElementById('mobile-to-chip').innerText = studio.vars.customerEmail;
+
+      // Render Bodies
+      const html = tpl.render(studio.vars);
+      document.getElementById('desktop-rendered-email').innerHTML = html;
+      document.getElementById('mobile-rendered-email').innerHTML = html;
+
+      updateCodeSnippet();
+    }
+
+    // Set Device
+    function setDevice(type) {
+      studio.device = type;
+      const dBtn = document.getElementById('device-btn-desktop');
+      const mBtn = document.getElementById('device-btn-mobile');
+      const deskBox = document.getElementById('desktop-container');
+      const mobBox = document.getElementById('iphone-container');
+      const mainCanvas = document.getElementById('main-scroll-canvas');
+
+      if (type === 'desktop') {
+        dBtn.className = 'px-3.5 py-1 rounded-lg transition flex items-center gap-1.5 bg-white text-blue-600 shadow-sm border border-slate-200/60 font-bold';
+        mBtn.className = 'px-3.5 py-1 rounded-lg transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900';
+        deskBox.classList.remove('hidden');
+        mobBox.classList.add('hidden');
+        mainCanvas.classList.remove('items-center');
+      } else {
+        mBtn.className = 'px-3.5 py-1 rounded-lg transition flex items-center gap-1.5 bg-white text-blue-600 shadow-sm border border-slate-200/60 font-bold';
+        dBtn.className = 'px-3.5 py-1 rounded-lg transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900';
+        deskBox.classList.add('hidden');
+        mobBox.classList.remove('hidden');
+        mainCanvas.classList.add('items-center');
+      }
+    }
+
+    // Select Template
+    function selectTemplate(key) {
+      studio.currentTemplate = key;
+      const tpl = templates[key];
+
+      ['invoice', 'welcome', 'otp', 'security', 'invite', 'upgrade'].forEach(k => {
+        const btn = document.getElementById(`tpl-${k}`);
+        if (k === key) {
+          btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 whitespace-nowrap bg-blue-50 text-blue-700 border border-blue-200 transition';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent transition';
+        }
+      });
+
+      document.getElementById('lbl-dyn-1').innerText = tpl.dyn1Label;
+      document.getElementById('lbl-dyn-2').innerText = tpl.dyn2Label;
+      document.getElementById('lbl-dyn-3').innerText = tpl.dyn3Label;
+
+      renderCanvas();
+    }
+
+    // Update Live Variables
+    function updateLiveVariables() {
+      studio.vars.customerName = document.getElementById('var-customer-name').value;
+      studio.vars.customerEmail = document.getElementById('var-customer-email').value;
+      studio.vars.dyn1 = document.getElementById('var-dyn-1').value;
+      studio.vars.dyn2 = document.getElementById('var-dyn-2').value;
+      studio.vars.dyn3 = document.getElementById('var-dyn-3').value;
+
+      renderCanvas();
+    }
+
+    // Trigger Notification
+    function triggerSimulatedEmail() {
+      const notif = document.getElementById('simulated-notification');
+      const tpl = templates[studio.currentTemplate];
+      document.getElementById('notif-sender').innerText = tpl.from;
+      document.getElementById('notif-subject').innerText = tpl.subject;
+
+      notif.classList.remove('hidden');
+      setTimeout(() => {
+        notif.classList.add('hidden');
+      }, 4500);
+    }
+
+    // Toggle Inspector
+    function toggleInspector() {
+      const dock = document.getElementById('inspector-dock');
+      studio.inspectorOpen = !studio.inspectorOpen;
+      if (studio.inspectorOpen) {
+        dock.classList.remove('hidden');
+      } else {
+        dock.classList.add('hidden');
+      }
+    }
+
+    // Tab switcher
+    function setInspectorTab(tab) {
+      studio.inspectorTab = tab;
+      const vBtn = document.getElementById('tab-btn-vars');
+      const cBtn = document.getElementById('tab-btn-code');
+      const vContent = document.getElementById('tab-content-vars');
+      const cContent = document.getElementById('tab-content-code');
+
+      if (tab === 'variables') {
+        vBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-blue-600 border border-slate-200 shadow-sm';
+        cBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900';
+        vContent.classList.remove('hidden');
+        cContent.classList.add('hidden');
+      } else {
+        cBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-blue-600 border border-slate-200 shadow-sm';
+        vBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900';
+        cContent.classList.remove('hidden');
+        cContent.classList.add('flex');
+        vContent.classList.add('hidden');
+      }
+    }
+
+    // Code Generator
+    function updateCodeSnippet() {
+      const code = `import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Preview,
+  Section,
+  Text,
+} from '@react-email/components';
+import * as React from 'react';
+
+interface EmailProps {
+  customerName: string;
+  amount: string;
+  invoiceId: string;
+}
+
+export const TransactionalEmail = ({
+  customerName = '${studio.vars.customerName}',
+  amount = '${studio.vars.dyn1}',
+  invoiceId = '${studio.vars.dyn2}',
+}: EmailProps) => (
+  <Html>
+    <Head />
+    <Preview>${templates[studio.currentTemplate].subject}</Preview>
+    <Body style={{ backgroundColor: '#ffffff', fontFamily: 'sans-serif' }}>
+      <Container style={{ maxWidth: '600px', margin: '20px auto', padding: '24px' }}>
+        <Heading style={{ fontSize: '20px', fontWeight: 'bold' }}>
+          Kip Tecnologia
+        </Heading>
+        <Text>Olá {customerName}, seu recibo de {amount} (#{invoiceId}) está confirmado.</Text>
+        <Section style={{ textAlign: 'center', marginTop: '20px' }}>
+          <Button
+            style={{ backgroundColor: '#0f172a', color: '#fff', padding: '12px 24px', borderRadius: '8px', fontWeight: 'bold' }}
+            href="https://kiptecnologia.com.br"
+          >
+            Visualizar Fatura Completa
+          </Button>
+        </Section>
+      </Container>
+    </Body>
+  </Html>
+);
+
+export default TransactionalEmail;`;
+
+      document.getElementById('code-snippet-pre').innerText = code;
+    }
+
+    // Copy Code Action
+    function copyCode() {
+      const code = document.getElementById('code-snippet-pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('copy-code-btn');
+        btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> Copiado!`;
+        setTimeout(() => {
+          btn.innerHTML = `<i class="fa-solid fa-copy"></i> Copiar TSX`;
+        }, 2000);
+      });
+    }
+
+    // Initialize
+    
+    
+    let currentMailLang = 'en'; // DEFAULT IS ENGLISH
+
+    const mailDictionary = {
+      en: {
+        flag: "🇧🇷",
+        flagLabel: "PT",
+        btnDesktop: "Normal View (Desktop)",
+        btnSimSend: "Simulate Send",
+        btnPricing: "Pro Plans",
+        btnInspector: "Inspector",
+        btnGetCode: "Get Code ($39)",
+        tplBarTitle: "Templates:",
+        tplInvoice: "1. SaaS Invoice & Billing",
+        tplWelcome: "2. Welcome & Onboarding",
+        tplOtp: "3. OTP Code / Magic Link",
+        tplSecurity: "4. Security Alert",
+        tplInvite: "5. Team / Org Invite",
+        tplUpgrade: "6. Trial End & Upgrade",
+        verifiedSender: "Verified Sender ✓",
+        emailDate: "Today, 09:41 AM",
+        toLabel: "To:",
+        tabVars: "Live Variables",
+        tabCode: "Code (.tsx)",
+        liveEditTitle: "Live Real-Time Editing",
+        liveEditSub: "Type in any field below to update the email preview instantly.",
+        varCustName: "Customer Name",
+        varCustEmail: "Customer Email",
+        badgeStdTitle: "React Email & Resend Standard",
+        badgeStdSub: "Validated across Apple Mail, Gmail, Outlook & Yahoo. Fully responsive.",
+        codeCleanTitle: "Clean Code",
+        btnCopyCode: "Copy TSX",
+        resendModalTitle: "Test Send via Resend API",
+        resendModalSub: "Deliver this template directly to your inbox",
+        resendDestEmail: "Destination Email:",
+        resendApiKey: "Resend API Key (Optional in demo):",
+        btnSendTransac: "Send Transactional Email",
+        mailPricingTitle: "MailCraft Pro Commercial Licensing",
+        mailPricingSub: "Stripe Checkout and Resend API setup ready for Micro-SaaS",
+        mailPlanRec: "Subscription",
+        mailMonthTitle: "Developer Pro Monthly",
+        mailMonthPrice: "$19",
+        mailMonthFreq: "/month",
+        mailF1: "All 15+ Luxury React Email Templates",
+        mailF2: "Unlimited Test Dispatches",
+        mailF3: "@react-email & Raw HTML Export",
+        mailF4: "SendGrid, AWS SES & Postmark Ready",
+        mailBtnTestCheckout: "Test Stripe Checkout ($19)",
+        mailBadgePopular: "Best Value",
+        mailLifeType: "One-time Payment",
+        mailLifeTitle: "Agency Studio Lifetime",
+        mailLifePrice: "$79",
+        mailLifeFreq: "one-time payment",
+        mailLf1: "Unlimited Commercial Client Use",
+        mailLf2: "Full Next.js 15 Source Code",
+        mailLf3: "All Future Templates Free",
+        mailLf4: "Priority VIP Support",
+        mailBtnBuyLife: "Acquire Lifetime License ($79)",
+        sampleVars: {
+          customerName: "Alexander Morgan",
+          customerEmail: "alex.morgan@techmail.io",
+          dyn1: "$497.00",
+          dyn2: "INV-2026-884",
+          dyn3: "Annual MailCraft Pro Plan"
+        }
+      },
+      pt: {
+        flag: "🇺🇸",
+        flagLabel: "EN",
+        btnDesktop: "Tela Normal (Desktop)",
+        btnSimSend: "Simular Envio",
+        btnPricing: "Planos Pro",
+        btnInspector: "Inspetor",
+        btnGetCode: "Obter Código ($39)",
+        tplBarTitle: "Modelos:",
+        tplInvoice: "1. Fatura & Cobrança SaaS",
+        tplWelcome: "2. Boas-vindas & Onboarding",
+        tplOtp: "3. Código OTP / Magic Link",
+        tplSecurity: "4. Alerta de Segurança",
+        tplInvite: "5. Convite para Organização",
+        tplUpgrade: "6. Fim de Trial & Upgrade",
+        verifiedSender: "Remetente Verificado ✓",
+        emailDate: "Hoje, 09:41",
+        toLabel: "Para:",
+        tabVars: "Variáveis Vivas",
+        tabCode: "Código (.tsx)",
+        liveEditTitle: "Edição em Tempo Real",
+        liveEditSub: "Digite em qualquer campo abaixo e o email à esquerda atualiza instantaneamente na tela.",
+        varCustName: "Nome do Cliente",
+        varCustEmail: "Email do Cliente",
+        badgeStdTitle: "Padrão React Email & Resend",
+        badgeStdSub: "Compatibilidade validada com todos os clientes de email do mercado. HTML responsivo sem quebras.",
+        codeCleanTitle: "Código Limpo",
+        btnCopyCode: "Copiar TSX",
+        resendModalTitle: "Disparo de Teste via Resend API",
+        resendModalSub: "Envie este template diretamente para sua caixa de entrada",
+        resendDestEmail: "E-mail de Destino:",
+        resendApiKey: "Chave Resend API (Opcional no modo demo):",
+        btnSendTransac: "Enviar E-mail Transacional",
+        mailPricingTitle: "Planos & Licenciamento MailCraft Pro",
+        mailPricingSub: "Arquitetura Stripe Checkout e integração pronta com Resend",
+        mailPlanRec: "Recorrente",
+        mailMonthTitle: "Developer Pro",
+        mailMonthPrice: "R$ 99",
+        mailMonthFreq: "/mês",
+        mailF1: "Todos os 15+ Templates de Luxo",
+        mailF2: "Disparos de teste ilimitados",
+        mailF3: "Exportação @react-email & HTML",
+        mailF4: "Compatível com SendGrid & AWS SES",
+        mailBtnTestCheckout: "Testar Checkout Stripe (R$ 99)",
+        mailBadgePopular: "Mais Escolhido",
+        mailLifeType: "Licença Vitalícia",
+        mailLifeTitle: "Agency Studio",
+        mailLifePrice: "R$ 349",
+        mailLifeFreq: "pagamento único",
+        mailLf1: "Uso comercial ilimitado em clientes",
+        mailLf2: "Código-fonte Next.js 15 completo",
+        mailLf3: "Novos templates inclusos grátis",
+        mailLf4: "Suporte Prioritário VIP",
+        mailBtnBuyLife: "Adquirir Licença Vitalícia (R$ 349)",
+        sampleVars: {
+          customerName: "Alexandre Prado",
+          customerEmail: "alexandre@empresa.com",
+          dyn1: "R$ 497,00",
+          dyn2: "INV-2026-884",
+          dyn3: "Plano Anual MailCraft Pro"
+        }
+      }
+    };
+
+    function applyMailcraftUiLanguage(lang) {
+      const d = mailDictionary[lang];
+      if (!d) return;
+
+      const setT = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text;
+      };
+
+      setT('mail-lang-flag', d.flag);
+      setT('mail-lang-label', d.flagLabel);
+      setT('lbl-btn-desktop', d.btnDesktop);
+      setT('lbl-btn-sim-send', d.btnSimSend);
+      setT('lbl-mail-btn-pricing', d.btnPricing);
+      setT('lbl-btn-inspector', d.btnInspector);
+      setT('lbl-mail-btn-getcode', d.btnGetCode);
+
+      setT('lbl-tpl-bar-title', d.tplBarTitle);
+      setT('lbl-tpl-invoice', d.tplInvoice);
+      setT('lbl-tpl-welcome', d.tplWelcome);
+      setT('lbl-tpl-otp', d.tplOtp);
+      setT('lbl-tpl-security', d.tplSecurity);
+      setT('lbl-tpl-invite', d.tplInvite);
+      setT('lbl-tpl-upgrade', d.tplUpgrade);
+
+      setT('lbl-verified-sender', d.verifiedSender);
+      setT('lbl-email-date', d.emailDate);
+      setT('lbl-to-label', d.toLabel);
+
+      setT('lbl-tab-vars', d.tabVars);
+      setT('lbl-tab-code', d.tabCode);
+      setT('lbl-live-edit-title', d.liveEditTitle);
+      setT('lbl-live-edit-sub', d.liveEditSub);
+      setT('lbl-var-cust-name', d.varCustName);
+      setT('lbl-var-cust-email', d.varCustEmail);
+      setT('lbl-badge-std-title', d.badgeStdTitle);
+      setT('lbl-badge-std-sub', d.badgeStdSub);
+      setT('lbl-code-clean-title', d.codeCleanTitle);
+      setT('lbl-btn-copy-code', d.btnCopyCode);
+
+      setT('lbl-resend-modal-title', d.resendModalTitle);
+      setT('lbl-resend-modal-sub', d.resendModalSub);
+      setT('lbl-resend-dest-email', d.resendDestEmail);
+      setT('lbl-resend-api-key', d.resendApiKey);
+      setT('lbl-btn-send-transac', d.btnSendTransac);
+
+      setT('lbl-mail-pricing-title', d.mailPricingTitle);
+      setT('lbl-mail-pricing-sub', d.mailPricingSub);
+      setT('lbl-mail-plan-rec', d.mailPlanRec);
+      setT('lbl-mail-month-title', d.mailMonthTitle);
+      setT('lbl-mail-month-price', d.mailMonthPrice);
+      setT('lbl-mail-month-freq', d.mailMonthFreq);
+      setT('lbl-mail-f1', d.mailF1);
+      setT('lbl-mail-f2', d.mailF2);
+      setT('lbl-mail-f3', d.mailF3);
+      setT('lbl-mail-f4', d.mailF4);
+      setT('lbl-mail-btn-test-checkout', d.mailBtnTestCheckout);
+      setT('lbl-mail-badge-popular', d.mailBadgePopular);
+      setT('lbl-mail-life-type', d.mailLifeType);
+      setT('lbl-mail-life-title', d.mailLifeTitle);
+      setT('lbl-mail-life-price', d.mailLifePrice);
+      setT('lbl-mail-life-freq', d.mailLifeFreq);
+      setT('lbl-mail-lf1', d.mailLf1);
+      setT('lbl-mail-lf2', d.mailLf2);
+      setT('lbl-mail-lf3', d.mailLf3);
+      setT('lbl-mail-lf4', d.mailLf4);
+      setT('lbl-mail-btn-buy-life', d.mailBtnBuyLife);
+
+      if (d.sampleVars) {
+        studio.vars = JSON.parse(JSON.stringify(d.sampleVars));
+        const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+        setVal('var-customer-name', studio.vars.customerName);
+        setVal('var-customer-email', studio.vars.customerEmail);
+        setVal('var-dyn-1', studio.vars.dyn1);
+        setVal('var-dyn-2', studio.vars.dyn2);
+        setVal('var-dyn-3', studio.vars.dyn3);
+        renderCanvas();
+      }
+    }
+
+    function toggleMailcraftLanguage() {
+      currentMailLang = currentMailLang === 'en' ? 'pt' : 'en';
+      applyMailcraftUiLanguage(currentMailLang);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      applyMailcraftUiLanguage('en');
+      selectTemplate('invoice');
+      setDevice('desktop');
+    });
+  </script>
+
+  <!-- Resend Live Dispatch Modal -->
+  <div id="resend-dispatch-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-paper-plane text-sm"></i>
+          </div>
+          <div>
+            <h3 id="lbl-resend-modal-title" class="text-sm font-bold text-slate-900">Test Send via Resend API</h3>
+            <p id="lbl-resend-modal-sub" class="text-[11px] text-slate-500">Deliver this template directly to your inbox</p>
+          </div>
+        </div>
+        <button onclick="closeResendModal()" class="w-7 h-7 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label id="lbl-resend-dest-email" class="block text-xs font-semibold text-slate-700 mb-1">Destination Email:</label>
+          <input type="email" id="test-recipient-email" placeholder="seu-email@gmail.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-blue-500 transition">
+        </div>
+        <div>
+          <label id="lbl-resend-api-key" class="block text-xs font-semibold text-slate-700 mb-1">Resend API Key (Optional in demo):</label>
+          <input type="password" id="test-resend-key" placeholder="re_123456789..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-blue-500 transition">
+        </div>
+
+        <button onclick="dispatchLiveTestEmail()" id="btn-dispatch-test" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
+          <i class="fa-solid fa-paper-plane"></i> <span id="lbl-btn-send-transac">Send Transactional Email</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MailCraft Pro Pricing Modal -->
+  <div id="mailcraft-pricing-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-crown text-sm"></i>
+          </div>
+          <div>
+            <h3 id="lbl-mail-pricing-title" class="text-sm font-bold text-slate-900">MailCraft Pro Commercial Licensing</h3>
+            <p id="lbl-mail-pricing-sub" class="text-[11px] text-slate-500">Stripe Checkout and Resend API setup ready for Micro-SaaS</p>
+          </div>
+        </div>
+        <button onclick="closeMailcraftPricingModal()" class="w-7 h-7 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-3.5 pt-1">
+        <!-- Monthly Plan -->
+        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 flex flex-col justify-between space-y-3">
+          <div>
+            <span id="lbl-mail-plan-rec" class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Subscription</span>
+            <h4 id="lbl-mail-month-title" class="text-base font-extrabold text-slate-900 mt-0.5">Developer Pro Monthly</h4>
+            <div class="text-2xl font-black text-slate-900 mt-2"><span id="lbl-mail-month-price">$19</span> <span id="lbl-mail-month-freq" class="text-xs font-normal text-slate-500">/month</span></div>
+            <ul class="text-xs text-slate-600 space-y-1.5 mt-3">
+              <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-blue-600 text-[10px]"></i> <span id="lbl-mail-f1">All 15+ Luxury React Email Templates</span></li>
+              <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-blue-600 text-[10px]"></i> <span id="lbl-mail-f2">Unlimited Test Dispatches</span></li>
+              <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-blue-600 text-[10px]"></i> <span id="lbl-mail-f3">@react-email & Raw HTML Export</span></li>
+              <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-blue-600 text-[10px]"></i> <span id="lbl-mail-f4">SendGrid, AWS SES & Postmark Ready</span></li>
+            </ul>
+          </div>
+          <button onclick="simulateMailcraftCheckout('monthly')" class="w-full py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition">
+            <span id="lbl-mail-btn-test-checkout">Test Stripe Checkout ($19)</span>
+          </button>
+        </div>
+
+        <!-- Lifetime Agency Plan -->
+        <div class="p-4 rounded-2xl border-2 border-orange-500 bg-orange-50/30 flex flex-col justify-between space-y-3 relative">
+          <span id="lbl-mail-badge-popular" class="absolute -top-2.5 right-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full shadow-sm">Best Value</span>
+          <div>
+            <span id="lbl-mail-life-type" class="text-[10px] font-bold uppercase tracking-wider text-orange-700">One-time Payment</span>
+            <h4 id="lbl-mail-life-title" class="text-base font-extrabold text-slate-900 mt-0.5">Agency Studio Lifetime</h4>
+            <div class="text-2xl font-black text-orange-600 mt-2"><span id="lbl-mail-life-price">$79</span> <span id="lbl-mail-life-freq" class="text-xs font-normal text-slate-500">one-time payment</span></div>
+            <ul class="text-xs text-slate-600 space-y-1.5 mt-3">
+              <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-orange-600 text-[10px]"></i> <span id="lbl-mail-lf1">Unlimited Commercial Client Use</span></li>
+              <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-orange-600 text-[10px]"></i> <span id="lbl-mail-lf2">Full Next.js 15 Source Code</span></li>
+              <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-orange-600 text-[10px]"></i> <span id="lbl-mail-lf3">All Future Templates Free</span></li>
+              <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-orange-600 text-[10px]"></i> <span id="lbl-mail-lf4">Priority VIP Support</span></li>
+            </ul>
+          </div>
+          <button onclick="simulateMailcraftCheckout('lifetime')" class="w-full py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-bold transition shadow-sm">
+            <span id="lbl-mail-btn-buy-life">Acquire Lifetime License ($79)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openResendModal() {
+      document.getElementById('resend-dispatch-modal').classList.remove('hidden');
+    }
+    function closeResendModal() {
+      document.getElementById('resend-dispatch-modal').classList.add('hidden');
+    }
+    function dispatchLiveTestEmail() {
+      const email = document.getElementById('test-recipient-email').value;
+      if (!email || !email.includes('@')) {
+        alert('Por favor, informe um endereço de e-mail válido para o teste.');
+        return;
+      }
+      const btn = document.getElementById('btn-dispatch-test');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Conectando à Resend API...';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> E-mail Enviado com Sucesso!';
+        setTimeout(() => {
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar E-mail Transacional';
+          btn.disabled = false;
+          closeResendModal();
+          alert(`E-mail transacional despachado com sucesso para ${email}!
+
+No código baixado pelo comprador, a rota /api/email/send-test faz a entrega real em alta velocidade através da API oficial da Resend.`);
+        }, 1200);
+      }, 800);
+    }
+
+    function openMailcraftPricingModal() {
+      document.getElementById('mailcraft-pricing-modal').classList.remove('hidden');
+    }
+    function closeMailcraftPricingModal() {
+      document.getElementById('mailcraft-pricing-modal').classList.add('hidden');
+    }
+    function simulateMailcraftCheckout(plan) {
+      if (currentMailLang === 'en') {
+        alert(`[Stripe Checkout Demo]\n\nSelected Plan: ${plan === 'monthly' ? 'Developer Pro ($19/mo)' : 'Agency Studio Lifetime ($79 one-time)'}\n\nIn the commercial boilerplate, this button initiates a Stripe Checkout session via /api/stripe/checkout with automatic webhook provisioning.`);
+      } else {
+        alert(`[Stripe Checkout Demonstrativo]\n\nPlano Selecionado: ${plan === 'monthly' ? 'Developer Pro (R$ 99/mês)' : 'Agency Studio Vitalício (R$ 349)'}\n\nNo código baixado pelo comprador, esta chamada cria uma sessão de pagamento real via /api/stripe/checkout com Webhooks.`);
+      }
+    }
+
+    // Override triggerSimulatedEmail to open the interactive modal
+    function triggerSimulatedEmail() {
+      openResendModal();
+    }
+  </script>
+
+</body>
+</html>
